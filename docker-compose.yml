@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  your_service_name:
+    image: opodatkuvayco-backend
+    ports:
+      - "3000:3000"
+    environment:
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_API_KEY: ${SUPABASE_API_KEY}
+      SESSION_SECRET: ${SESSION_SECRET}
+      CLIENT_URL: ${CLIENT_URL}
