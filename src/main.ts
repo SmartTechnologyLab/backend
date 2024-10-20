@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cors from 'cors';
 import * as bodyParser from 'body-parser';
 import { ConfigService } from '@nestjs/config';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,8 +17,17 @@ async function bootstrap() {
   const port = parseInt(configService.get<string>('PORT'), 10) || 3000;
 
   app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.text({ type: 'application/xml', limit: '50mb' }));
 
   app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      forbidNonWhitelisted: true,
+    }),
+  );
 
   app.use(
     cors({
