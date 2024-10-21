@@ -5,6 +5,8 @@ import { LocalGuard } from './guards/local.guards';
 import { Request } from 'express';
 import { JwtGuard } from './guards/jwt.quards';
 import { ApiTags } from '@nestjs/swagger';
+import { RefreshDto } from './dto/refresh.dto';
+import { RefreshGuard } from './guards/refresh.guard';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -28,5 +30,11 @@ export class AuthController {
   @Post('create')
   createUser(@Body() createDto: AuthLoginDto) {
     return this.authService.createUser(createDto);
+  }
+
+  @Post('refresh')
+  @UseGuards(RefreshGuard)
+  refresh(@Body() refreshDto: RefreshDto) {
+    return this.authService.refreshToken(refreshDto.refreshToken);
   }
 }

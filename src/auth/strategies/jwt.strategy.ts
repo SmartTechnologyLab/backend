@@ -18,3 +18,20 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     return payLoad;
   }
 }
+
+@Injectable()
+export class RefreshTokenStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
+  constructor() {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: 'refreshSecretKey',
+    });
+  }
+
+  validate(payload: any) {
+    console.log('inside refresh token strategy');
+    console.log(payload);
+    return payload;
+  }
+}

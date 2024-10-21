@@ -6,7 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './strategies/local.straqtegy';
-import { JwtStrategy } from './strategies/jwt.strategy';
+import { JwtStrategy, RefreshTokenStrategy } from './strategies/jwt.strategy';
+import { RefreshGuard } from './guards/refresh.guard';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       signOptions: { expiresIn: '1h' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshTokenStrategy, RefreshGuard],
   controllers: [AuthController],
 })
 export class AuthModule {}

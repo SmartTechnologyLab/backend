@@ -26,4 +26,19 @@ export class AuthService {
     const newUser = this.userRepository.create(createDto);
     return this.userRepository.save(newUser);
   }
+
+  async refreshToken(refreshToken: string) {
+    try {
+      const payload = this.jwtService.verify(refreshToken, { secret: 'refreshSecretKey' });
+      const user = await this.userRepository.findOneBy({ id: payload.id });
+      if (!user) {
+        throw new Error('User not found');
+      }
+      const { password, ...userData } = user;
+      const newAccessToken = this.jwtService.sign(userData);
+      return { accessToken: newAccessToken };
+    } catch (error) {
+      throw new Error('Invalid refresh token');
+    }
+  }
 }
