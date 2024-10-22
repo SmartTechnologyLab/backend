@@ -31,7 +31,9 @@ export class AuthService {
 
   async refreshToken(refreshToken: string) {
     try {
-      const payload = this.jwtService.verify(refreshToken, { secret: 'refreshSecretKey' });
+      const payload = this.jwtService.verify(refreshToken, {
+        secret: 'refreshSecretKey',
+      });
       const user = await this.userRepository.findOneBy({ id: payload.id });
       if (!user) {
         throw new Error('User not found');
@@ -46,6 +48,9 @@ export class AuthService {
 
   async generateRefreshToken(user: any) {
     const payload = { id: user.id, username: user.username };
-    return this.jwtService.sign(payload, { secret: 'refreshSecretKey', expiresIn: '7d' });
+    return this.jwtService.sign(payload, {
+      secret: 'refreshSecretKey',
+      expiresIn: '7d',
+    });
   }
 }

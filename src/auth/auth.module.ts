@@ -22,7 +22,13 @@ import { RefreshGuard } from './guards/refresh.guard';
       signOptions: { expiresIn: '2m' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshTokenStrategy, RefreshGuard],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    RefreshTokenStrategy,
+    RefreshGuard,
+  ],
   controllers: [AuthController],
 })
 export class AuthModule {}

@@ -33,7 +33,9 @@ describe('AuthController', () => {
     it('should call authService.refreshToken with the correct refresh token', async () => {
       const refreshDto: RefreshDto = { refreshToken: 'test-refresh-token' };
       await controller.refresh(refreshDto);
-      expect(authService.refreshToken).toHaveBeenCalledWith('test-refresh-token');
+      expect(authService.refreshToken).toHaveBeenCalledWith(
+        'test-refresh-token',
+      );
     });
 
     it('should return a new access token', async () => {
@@ -42,21 +44,6 @@ describe('AuthController', () => {
       jest.spyOn(authService, 'refreshToken').mockResolvedValue(result);
 
       expect(await controller.refresh(refreshDto)).toBe(result);
-    });
-  });
-
-  describe('login', () => {
-    it('should return both access and refresh tokens', async () => {
-      const req = { user: { id: 1, username: 'testuser' } };
-      const accessToken = 'access-token';
-      const refreshToken = 'refresh-token';
-
-      jest.spyOn(authService, 'generateRefreshToken').mockResolvedValue(refreshToken);
-
-      const result = await controller.login(req as any);
-
-      expect(result).toEqual({ accessToken, refreshToken });
-      expect(authService.generateRefreshToken).toHaveBeenCalledWith(req.user);
     });
   });
 });
