@@ -32,7 +32,7 @@ describe('AuthService', () => {
   });
 
   describe('refreshToken', () => {
-    it('should return a new access token', async () => {
+    it('should return a new access token and refresh token', async () => {
       const refreshToken = 'test-refresh-token';
       const user = { id: 1, username: 'testuser', password: 'testpassword' };
       const payload = { id: user.id };
@@ -98,6 +98,46 @@ describe('AuthService', () => {
         { id: user.id, username: user.username },
         { secret: 'refreshSecretKey', expiresIn: '7d' },
       );
+    });
+  });
+
+  describe('validateUser', () => {
+    it('should return the user object if the username and password are correct', async () => {
+      const username = 'testuser';
+      const password = 'testpassword';
+      const user = { id: 1, username, password };
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(user as User);
+
+      const result = await service.validateUser({ username, password });
+
+      expect(result).toEqual(user);
+      expect(userRepository.findOneBy).toHaveBeenCalledWith({ username });
+    });
+
+    it('should return null if the username is incorrect', async () => {
+      const username = 'wronguser';
+      const password = 'testpassword';
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(null);
+
+      const result = await service.validateUser({ username, password });
+
+      expect(result).toBeNull();
+      expect(userRepository.findOneBy).toHaveBeenCalledWith({ username });
+    });
+
+    it('should return null if the password is incorrect', async () => {
+      const username = 'testuser';
+      const password = 'wrongpassword';
+      const user = { id: 1, username, password: 'testpassword' };
+
+      jest.spyOn(userRepository, 'findOneBy').mockResolvedValue(user as User);
+
+      const result = await service.validateUser({ username, password });
+
+      expect(result).toBeNull();
+      expect(userRepository.findOneBy).toHaveBeenCalledWith({ username });
     });
   });
 });

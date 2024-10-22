@@ -17,8 +17,7 @@ export class AuthService {
     if (!findUser) return null;
 
     if (password === findUser.password) {
-      const tokens = this.generateTokens(findUser);
-      return tokens;
+      return findUser;
     }
   }
 

@@ -16,7 +16,8 @@ export class AuthController {
   @Post('login')
   @UseGuards(LocalGuard)
   async login(@Req() req: Request) {
-    const tokens = await this.authService.generateTokens(req.user);
+    const user = await this.authService.validateUser(req.body);
+    const tokens = await this.authService.generateTokens(user);
     return tokens;
   }
 
@@ -35,7 +36,8 @@ export class AuthController {
 
   @Post('refresh')
   @UseGuards(RefreshGuard)
-  refresh(@Body() refreshDto: RefreshDto) {
-    return this.authService.refreshToken(refreshDto.refreshToken);
+  async refresh(@Body() refreshDto: RefreshDto) {
+    const tokens = await this.authService.refreshToken(refreshDto.refreshToken);
+    return tokens;
   }
 }
